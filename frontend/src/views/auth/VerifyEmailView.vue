@@ -7,16 +7,24 @@
         <router-link to="/">
           <img class="mx-auto h-12 w-auto" src="@/assets/logo.jpg" alt="Logo" />
         </router-link>
-        <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+        <h2
+          class="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white"
+        >
           Verify your email
         </h2>
         <p class="mt-2 text-center text-sm text-gray-600 dark:text-gray-300">
-          Please enter the verification code sent to your email
+          Please enter the verification code sent to
+          <span class="font-medium text-indigo-600 dark:text-indigo-400">{{
+            userEmail
+          }}</span>
         </p>
       </div>
 
       <div class="mt-8">
-        <div v-if="successMessage" class="rounded-md bg-green-50 p-4 mb-4">
+        <div
+          v-if="successMessage"
+          class="rounded-md bg-green-50 dark:bg-green-900 p-4 mb-4"
+        >
           <div class="flex">
             <div class="flex-shrink-0">
               <svg
@@ -34,14 +42,19 @@
               </svg>
             </div>
             <div class="ml-3">
-              <h3 class="text-sm font-medium text-green-800">
+              <h3
+                class="text-sm font-medium text-green-800 dark:text-green-200"
+              >
                 {{ successMessage }}
               </h3>
             </div>
           </div>
         </div>
 
-        <div v-if="errorMessage" class="rounded-md bg-red-50 p-4 mb-4">
+        <div
+          v-if="errorMessage"
+          class="rounded-md bg-red-50 dark:bg-red-900 p-4 mb-4"
+        >
           <div class="flex">
             <div class="flex-shrink-0">
               <svg
@@ -59,7 +72,7 @@
               </svg>
             </div>
             <div class="ml-3">
-              <h3 class="text-sm font-medium text-red-800">
+              <h3 class="text-sm font-medium text-red-800 dark:text-red-200">
                 {{ errorMessage }}
               </h3>
             </div>
@@ -68,19 +81,14 @@
 
         <form class="space-y-6" @submit.prevent="verifyEmail">
           <app-input
-            v-model="form.email"
-            type="email"
-            label="Email address"
-            :error="errors.email"
-            required
-          />
-
-          <app-input
             v-model="form.otp"
             type="text"
             label="Verification code"
             :error="errors.otp"
             required
+            autofocus
+            class="text-center text-lg"
+            placeholder="Enter 6-digit code"
           />
 
           <div>
@@ -95,14 +103,15 @@
           </div>
 
           <div class="text-center">
-            <p class="text-sm text-gray-600">
+            <p class="text-sm text-gray-600 dark:text-gray-400">
               Didn't receive a code?
               <a
                 @click.prevent="resendCode"
                 href="#"
-                class="font-medium text-indigo-600 hover:text-indigo-500 cursor-pointer"
+                class="font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 cursor-pointer"
+                :class="{ 'opacity-50 cursor-not-allowed': resendLoading }"
               >
-                Resend code
+                {{ resendLoading ? "Sending..." : "Resend code" }}
               </a>
             </p>
           </div>
@@ -114,21 +123,23 @@
 
 <script setup>
 import { ref, reactive, onMounted } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import AppInput from "@/components/ui/AppInput.vue";
 import AppButton from "@/components/ui/AppButton.vue";
 
 const router = useRouter();
+const route = useRoute();
 const authStore = useAuthStore();
 
+// Get the user email from store
+const userEmail = ref("");
+
 const form = reactive({
-  email: "",
   otp: "",
 });
 
 const errors = reactive({
-  email: "",
   otp: "",
 });
 
@@ -138,73 +149,95 @@ const errorMessage = ref("");
 const successMessage = ref("");
 
 onMounted(() => {
-  if (authStore.user) {
-    form.email = authStore.user.email;
+  console.log("Auth store state:", {
+    user: authStore.user,
+    registrationEmail: authStore.registrationEmail,
+    localstorage: {
+      userEmail:
+        localStorage.getItem("userEmail") || localStorage.getItem("tempEmail"),
+      registrationEmail: localStorage.getItem("registrationEmail"),
+    },
+  });
+
+  // Check multiple sources for the email
+  console.log(authStore.tempEmail);
+  if (authStore.registrationEmail || authStore.tempEmail) {
+    userEmail.value = authStore.registrationEmail || authStore.tempEmail;
+    console.log("Using registration email from store:", userEmail.value);
+  } else {
+    console.error("No email found in any location");
+    errorMessage.value = "Email information missing. Please register first.";
+    // setTimeout(() => {
+    //   router.push("/register");
+    // }, 3000);
   }
 });
 
 const verifyEmail = async () => {
   // Reset errors
-  errors.email = "";
   errors.otp = "";
   errorMessage.value = "";
 
   // Validate
-  let valid = true;
-
-  if (!form.email) {
-    errors.email = "Email is required";
-    valid = false;
-  }
-
   if (!form.otp) {
     errors.otp = "Verification code is required";
-    valid = false;
+    return;
   }
 
-  if (!valid) return;
+  console.log("Submitting verification with:", {
+    email: userEmail.value,
+    otp: form.otp,
+  });
 
   try {
     loading.value = true;
-    await authStore.verifyEmail(form);
+    const response = await authStore.verifyEmail({
+      email: userEmail.value,
+      otp: form.otp,
+    });
+    console.log("Verification success:", response);
+
     successMessage.value = "Email verified successfully!";
-    setTimeout(() => {
-      router.push("/");
-    }, 2000);
+
+    // Only redirect if we have a successful response
+    if (response && response.success) {
+      setTimeout(() => {
+        router.push("/");
+      }, 2000);
+    }
   } catch (error) {
-    if (error.response?.data?.errors) {
-      const serverErrors = error.response.data.errors;
-      for (const key in serverErrors) {
-        if (key in errors) {
-          errors[key] = serverErrors[key][0];
-        }
-      }
+    console.error("Verification error details:", {
+      error,
+      response: error.response,
+      data: error.response?.data,
+    });
+
+    if (error.response?.data?.errors?.otp) {
+      errors.otp = error.response.data.errors.otp[0];
     } else {
       errorMessage.value =
-        error.response?.data?.message || "Something went wrong";
+        error.response?.data?.message || "Invalid verification code";
+      stop();
     }
   } finally {
     loading.value = false;
   }
 };
 
-const resendCode = async () => {
-  if (!form.email) {
-    errors.email = "Email is required";
-    return;
-  }
+// const resendCode = async () => {
+//   if (resendLoading.value) return;
 
-  try {
-    resendLoading.value = true;
-    await authStore.sendVerificationEmail(form.email);
-    successMessage.value = "Verification code sent successfully!";
-    errorMessage.value = "";
-  } catch (error) {
-    successMessage.value = "";
-    errorMessage.value =
-      error.response?.data?.message || "Failed to send verification code";
-  } finally {
-    resendLoading.value = false;
-  }
-};
+//   try {
+//     resendLoading.value = true;
+//     await authStore.sendVerificationEmail(userEmail.value);
+//     successMessage.value = "Verification code sent successfully!";
+//     errorMessage.value = "";
+//   } catch (error) {
+//     successMessage.value = "";
+//     errorMessage.value =
+//       error.response?.data?.message || "Failed to send verification code";
+//   } finally {
+//     resendLoading.value = false;
+//   }
+// };
 </script>

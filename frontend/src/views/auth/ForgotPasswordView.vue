@@ -140,7 +140,8 @@ import { ref, reactive } from "vue";
 import { useAuthStore } from "@/stores/auth";
 import AppInput from "../../components/ui/AppInput.vue";
 import AppButton from "../../components/ui/AppButton.vue";
-
+import { useRouter } from "vue-router";
+const router = useRouter();
 const authStore = useAuthStore();
 
 const form = reactive({
@@ -168,9 +169,11 @@ const sendResetLink = async () => {
 
   try {
     loading.value = true;
-    await authStore.forgotPassword(form.email);
-    successMessage.value =
-      "Password reset instructions have been sent to your email";
+    const response = await authStore.forgotPassword(form.email);
+    successMessage.value = response.data.message;
+    setTimeout(() => {
+      router.push("/reset-password");
+    }, 3000);
   } catch (error) {
     if (error.response?.data?.errors?.email) {
       errors.email = error.response.data.errors.email[0];

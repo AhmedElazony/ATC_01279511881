@@ -383,7 +383,7 @@ const logout = async () => {
   await authStore.logout();
   isMenuOpen.value = false;
   isMobileMenuOpen.value = false;
-  router.push("/login");
+  router.push("/");
 };
 
 const closeMenuOnFocusOut = (event) => {

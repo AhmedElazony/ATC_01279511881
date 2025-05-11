@@ -64,4 +64,11 @@ class AuthController extends ApiController
 
         return $this->success('Logged out successfully');
     }
+
+    public function user()
+    {
+        return $this->success([
+            'user' => UserResource::make(auth()->user()),
+        ]);
+    }
 }

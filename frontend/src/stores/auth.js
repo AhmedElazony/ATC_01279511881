@@ -6,6 +6,11 @@ import api from "@/services/api";
 export const useAuthStore = defineStore("auth", () => {
   const user = ref(null);
   const token = ref(localStorage.getItem("token") || null);
+  // Add a separate email ref for registration flow
+  const registrationEmail = ref(
+    localStorage.getItem("registrationEmail") || null
+  );
+  const tempEmail = ref(localStorage.getItem("tempEmail") || null);
 
   // Load the token from localStorage
   if (token.value) {
@@ -13,25 +18,39 @@ export const useAuthStore = defineStore("auth", () => {
   }
 
   async function register(formData) {
-    const response = await api.post("/auth/register", formData);
+    try {
+      const response = await api.post("/auth/register", formData);
+      console.log("Register response:", response.data);
 
-    if (response.data.token) {
-      token.value = response.data.token;
-      user.value = response.data.user;
+      // Store the email for verification flow
+      registrationEmail.value = formData.email;
+      localStorage.setItem("registrationEmail", formData.email);
 
-      localStorage.setItem("token", token.value);
-      api.defaults.headers.common["Authorization"] = `Bearer ${token.value}`;
+      // Check if the response contains a token
+      if (response.data && response.data.data.token) {
+        // Store the token and user data
+        token.value = response.data.data.token;
+        localStorage.setItem("token", token.value);
+
+        // Set the authorization header for future API requests
+        api.defaults.headers.common["Authorization"] = `Bearer ${token.value}`;
+      } else {
+        console.log("No token received from registration API");
+      }
+
+      return response.data;
+    } catch (error) {
+      console.error("Registration error:", error);
+      throw error;
     }
-
-    return response.data;
   }
 
   async function login(credentials) {
     const response = await api.post("/auth/login", credentials);
 
-    if (response.data.token) {
-      token.value = response.data.token;
-      user.value = response.data.user;
+    if (response.data.data.token) {
+      token.value = response.data.data.token;
+      user.value = response.data.data.user;
 
       localStorage.setItem("token", token.value);
       api.defaults.headers.common["Authorization"] = `Bearer ${token.value}`;
@@ -56,32 +75,48 @@ export const useAuthStore = defineStore("auth", () => {
     }
   }
 
-  async function fetchUser() {
-    if (token.value) {
-      try {
-        const response = await api.get("/auth/user");
-        user.value = response.data.user;
-        return user.value;
-      } catch (error) {
-        logout();
-        throw error;
+  async function verifyEmail(data) {
+    try {
+      const headers = {};
+      if (token.value) {
+        headers["Authorization"] = `Bearer ${token.value}`;
       }
+      // Send request to backend
+      const response = await api.post("/auth/verify-email", data, { headers });
+      console.log("Verification API response:", response.data.data);
+
+      // If we get a token back, save it
+      if (response.data.data.token) {
+        token.value = response.data.data.token;
+        user.value = response.data.data.user;
+
+        localStorage.setItem("token", token.value);
+        api.defaults.headers.common["Authorization"] = `Bearer ${token.value}`;
+      }
+
+      // Clear registration email as it's no longer needed
+      localStorage.removeItem("registrationEmail");
+      registrationEmail.value = null;
+
+      return response.data;
+    } catch (error) {
+      console.error("API verification error:", {
+        status: error.response?.status,
+        data: error.response?.data,
+      });
+      throw error;
     }
-    return null;
   }
 
-  async function verifyEmail(data) {
-    const response = await api.post("/auth/verify-email", data);
-
-    if (response.data.token) {
-      token.value = response.data.token;
-      user.value = response.data.user;
-
-      localStorage.setItem("token", token.value);
-      api.defaults.headers.common["Authorization"] = `Bearer ${token.value}`;
+  async function fetchUser() {
+    try {
+      const response = await api.get("/auth/user");
+      user.value = response.data.data.user;
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      throw error;
     }
-
-    return response.data;
   }
 
   async function sendVerificationEmail(email) {
@@ -89,7 +124,13 @@ export const useAuthStore = defineStore("auth", () => {
   }
 
   async function forgotPassword(email) {
-    return await api.post("/auth/forgot-password", { email });
+    const response = await api.post("/auth/forgot-password", { email });
+    if (response.status === 200) {
+      tempEmail.value = email;
+      localStorage.setItem("tempEmail", email);
+    }
+
+    return response;
   }
 
   async function resetPassword(data) {
@@ -101,11 +142,13 @@ export const useAuthStore = defineStore("auth", () => {
   return {
     user,
     token,
+    registrationEmail,
+    tempEmail,
     register,
     login,
     logout,
-    fetchUser,
     verifyEmail,
+    fetchUser,
     sendVerificationEmail,
     forgotPassword,
     resetPassword,
