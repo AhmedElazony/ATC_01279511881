@@ -3,7 +3,7 @@
     <label
       v-if="label"
       :for="id"
-      class="block text-sm font-medium text-gray-700 mb-1"
+      class="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-300"
     >
       {{ label }}
       <span v-if="required" class="text-red-500">*</span>
@@ -18,7 +18,7 @@
         :disabled="disabled"
         :required="required"
         :class="[
-          'block w-full py-2 px-3 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm',
+          'block w-full py-2 px-3 border text-black rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm',
           error ? 'border-red-300' : 'border-gray-300',
           disabled ? 'bg-gray-100 cursor-not-allowed' : 'bg-white',
         ]"

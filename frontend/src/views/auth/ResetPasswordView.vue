@@ -1,14 +1,16 @@
 <template>
   <div
-    class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8"
+    class="min-h-screen flex items-center justify-center dark:bg-gray-900 bg-gray-50 py-12 px-4 sm:px-6 lg:px-8"
   >
     <div class="max-w-md w-full space-y-8">
       <div>
         <img class="mx-auto h-12 w-auto" src="@/assets/logo.jpg" alt="Logo" />
-        <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+        <h2
+          class="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white"
+        >
           Set new password
         </h2>
-        <p class="mt-2 text-center text-sm text-gray-600">
+        <p class="mt-2 text-center text-sm text-gray-600 dark:text-gray-300">
           Create a new secure password for your account
         </p>
       </div>
@@ -35,7 +37,7 @@
               <h3 class="text-sm font-medium text-green-800">
                 {{ successMessage }}
               </h3>
-              <div class="mt-2 text-sm text-green-700">
+              <div class="mt-2 text-sm text-green-700 dark:text-green-400">
                 <p>You will be redirected to the login page shortly.</p>
               </div>
             </div>

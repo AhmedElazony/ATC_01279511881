@@ -1,38 +1,20 @@
 <template>
-  <header class="bg-white shadow sticky top-0 z-50">
+  <header class="bg-white dark:bg-gray-900 shadow sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between h-16">
         <div class="flex items-center">
           <div class="flex-shrink-0 flex items-center">
             <router-link to="/" class="flex items-center space-x-2">
-              <span class="text-xl font-bold text-indigo-600">EventSphere</span>
+              <span class="text-xl font-bold text-indigo-600">EventSystem</span>
             </router-link>
           </div>
           <nav
             class="hidden md:ml-8 md:flex md:space-x-8"
             aria-label="Main navigation"
           >
-            <router-link
-              to="/"
-              class="hover:text-indigo-600 inline-flex text-gray-500 items-center px-1 py-2 text-sm font-medium border-b-2 border-transparent transition-colors duration-200"
-              active-class="border-indigo-600 text-indigo-600"
-            >
-              Home
-            </router-link>
-            <router-link
-              to="/events"
-              class="hover:text-indigo-600 text-gray-500 inline-flex items-center px-1 py-2 text-sm font-medium border-b-2 border-transparent transition-colors duration-200"
-              active-class="border-indigo-600 text-indigo-600"
-            >
-              Events
-            </router-link>
-            <router-link
-              to="/categories"
-              class="hover:text-indigo-600 text-gray-500 inline-flex items-center px-1 py-2 text-sm font-medium border-b-2 border-transparent transition-colors duration-200"
-              active-class="border-indigo-600 text-indigo-600"
-            >
-              Categories
-            </router-link>
+            <NavLink to="/">Home</NavLink>
+            <NavLink to="/events" name="Events">Events</NavLink>
+            <NavLink to="/categories" name="Categories">Categories</NavLink>
             <router-link
               v-if="isLoggedIn"
               to="/my-bookings"
@@ -46,6 +28,8 @@
 
         <!-- Right side navigation -->
         <div class="hidden md:flex md:items-center md:space-x-4">
+          <!-- Add the dark mode toggle button -->
+          <ToggleDarkModeButton />
           <div v-if="isLoggedIn" class="relative">
             <button
               @click="isMenuOpen = !isMenuOpen"
@@ -187,11 +171,14 @@
         <!-- Mobile menu button -->
         <div class="flex items-center md:hidden">
           <button
-            @click="isMobileMenuOpen = !isMobileMenuOpen"
+            @click="toggleMobileMenu"
+            type="button"
             class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100"
-            aria-expanded="false"
+            :aria-expanded="isMobileMenuOpen"
           >
-            <span class="sr-only">Open main menu</span>
+            <span class="sr-only">{{
+              isMobileMenuOpen ? "Close menu" : "Open menu"
+            }}</span>
             <svg
               v-if="!isMobileMenuOpen"
               class="block h-6 w-6"
@@ -231,8 +218,8 @@
 
     <!-- Mobile menu -->
     <div
-      v-if="isMobileMenuOpen"
-      class="md:hidden shadow-lg border-t"
+      v-show="isMobileMenuOpen"
+      class="md:hidden shadow-lg border-t bg-white dark:bg-gray-600 transition-all duration-200"
       ref="mobileMenu"
     >
       <div class="pt-2 pb-3 space-y-1">
@@ -357,6 +344,8 @@
 import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useAuthStore } from "../../stores/auth";
+import ToggleDarkModeButton from "../ui/ToggleDarkModeButton.vue";
+import NavLink from "../ui/NavLink.vue";
 
 const router = useRouter();
 const route = useRoute();
@@ -379,6 +368,16 @@ const userInitials = computed(() => {
   if (names.length === 1) return names[0].charAt(0).toUpperCase();
   return (names[0].charAt(0) + names[names.length - 1].charAt(0)).toUpperCase();
 });
+
+const toggleMobileMenu = () => {
+  isMobileMenuOpen.value = !isMobileMenuOpen.value;
+};
+
+const handleEscKey = (event) => {
+  if (event.key === "Escape" && isMobileMenuOpen.value) {
+    isMobileMenuOpen.value = false;
+  }
+};
 
 const logout = async () => {
   await authStore.logout();
@@ -424,9 +423,11 @@ const vClickOutside = {
 // Close mobile menu on route change
 onMounted(() => {
   document.addEventListener("click", handleClickOutside);
+  document.addEventListener("keydown", handleEscKey);
 });
 
 onBeforeUnmount(() => {
   document.removeEventListener("click", handleClickOutside);
+  document.removeEventListener("keydown", handleEscKey);
 });
 </script>

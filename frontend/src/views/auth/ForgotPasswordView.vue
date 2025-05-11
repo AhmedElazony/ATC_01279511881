@@ -1,6 +1,6 @@
 <template>
   <div
-    class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8"
+    class="min-h-screen flex items-center dark:bg-gray-900 justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8"
   >
     <div class="max-w-md w-full space-y-8">
       <div>
@@ -10,7 +10,7 @@
         <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
           Reset your password
         </h2>
-        <p class="mt-2 text-center text-sm text-gray-600">
+        <p class="mt-2 text-center text-sm text-gray-600 dark:text-gray-300">
           Enter your email address and we'll send you a link to reset your
           password
         </p>
@@ -113,7 +113,9 @@
               <div class="w-full border-t border-gray-300"></div>
             </div>
             <div class="relative flex justify-center text-sm">
-              <span class="px-2 bg-gray-50 text-gray-500">
+              <span
+                class="px-2 bg-gray-50 text-gray-500 dark:bg-gray-900 dark:text-gray-300"
+              >
                 Remember your password?
               </span>
             </div>

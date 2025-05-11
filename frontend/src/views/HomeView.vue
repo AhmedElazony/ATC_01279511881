@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gray-50">
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
     <!-- Hero Section -->
     <section class="bg-indigo-600 text-white">
       <div
@@ -14,12 +14,7 @@
             memories. From concerts to workshops, find what inspires you.
           </p>
           <div class="mt-8 flex flex-wrap gap-4">
-            <router-link
-              to="/events"
-              class="bg-white text-indigo-600 hover:bg-indigo-50 px-6 py-3 rounded-md font-medium text-lg transition-colors"
-            >
-              Browse Events
-            </router-link>
+            <LinkButton to="/events">Browse Events</LinkButton>
             <router-link
               to="/register"
               class="bg-indigo-500 hover:bg-indigo-400 text-white px-6 py-3 rounded-md font-medium text-lg transition-colors"
@@ -62,20 +57,22 @@
           <div
             v-for="event in events"
             :key="event.id"
-            class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow"
+            class="bg-white dark:bg-gray-700 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow"
           >
             <div
-              class="aspect-video bg-gray-200 flex items-center justify-center text-xl font-semibold text-gray-400"
+              class="aspect-video dark:bg-gray-500 dark:text-white bg-gray-200 flex items-center justify-center text-xl font-semibold text-gray-400"
             >
               Event Image
             </div>
             <div class="p-6">
               <div class="flex justify-between items-start">
                 <div>
-                  <h3 class="text-xl font-bold text-gray-900">
+                  <h3
+                    class="text-xl font-bold text-gray-900 dark:text-gray-200"
+                  >
                     {{ event.title }}
                   </h3>
-                  <p class="text-gray-500 mt-1">
+                  <p class="text-gray-500 mt-1 dark:text-gray-300">
                     {{ formatDate(event.start_date) }}
                   </p>
                 </div>
@@ -85,19 +82,16 @@
                   {{ event.category }}
                 </span>
               </div>
-              <p class="mt-3 text-gray-600 line-clamp-3">
+              <p class="mt-3 text-gray-600 line-clamp-3 dark:text-gray-300">
                 {{ event.description }}
               </p>
               <div class="mt-4 flex justify-between items-center">
-                <p class="text-indigo-600 font-bold">
+                <p class="text-indigo-600 font-bold dark:text-indigo-400">
                   {{ formatPrice(event.price) }}
                 </p>
-                <router-link
-                  :to="`/events/${event.id}`"
-                  class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded font-medium transition-colors"
+                <LinkButton :to="`/events/${event.id}`">
+                  View Details</LinkButton
                 >
-                  View Details
-                </router-link>
               </div>
             </div>
           </div>
@@ -129,9 +123,9 @@
     </section>
 
     <!-- Categories Section -->
-    <section class="py-16 bg-gray-100">
+    <section class="py-16 bg-gray-100 dark:bg-gray-800">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 class="text-3xl font-bold text-gray-900 mb-8">
+        <h2 class="text-3xl font-bold text-gray-900 mb-8 dark:text-white">
           Browse by Category
         </h2>
 
@@ -139,15 +133,17 @@
           <div
             v-for="category in categories"
             :key="category.id"
-            class="bg-white p-6 rounded-lg shadow hover:shadow-md transition-shadow text-center"
+            class="bg-white p-6 rounded-lg shadow hover:shadow-md transition-shadow text-center dark:bg-gray-500"
           >
             <div
-              class="w-12 h-12 mx-auto bg-indigo-100 rounded-full flex items-center justify-center mb-4"
+              class="w-12 h-12 mx-auto bg-indigo-100 rounded-full flex items-center justify-center mb-4 dark:bg-gray-600"
             >
               <span class="text-indigo-600 text-xl">{{ category.icon }}</span>
             </div>
-            <h3 class="font-medium text-gray-900">{{ category.name }}</h3>
-            <p class="text-sm text-gray-500 mt-1">
+            <h3 class="font-medium text-gray-900 dark:text-gray-100">
+              {{ category.name }}
+            </h3>
+            <p class="text-sm text-gray-500 mt-1 dark:text-gray-300">
               {{ category.count }} events
             </p>
           </div>
@@ -156,7 +152,7 @@
     </section>
 
     <!-- Call to Action -->
-    <section class="py-16 bg-indigo-700 text-white">
+    <section class="py-16 bg-indigo-700 text-white dark:bg-blue-900">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h2 class="text-3xl font-bold mb-4">
           Ready to discover amazing events?
@@ -164,12 +160,7 @@
         <p class="text-xl text-indigo-200 mb-8">
           Sign up today and start exploring events near you
         </p>
-        <router-link
-          to="/register"
-          class="bg-white text-indigo-700 hover:bg-indigo-50 px-8 py-4 rounded-md font-bold text-lg inline-block transition-colors"
-        >
-          Create an Account
-        </router-link>
+        <LinkButton to="/register">Create an account</LinkButton>
       </div>
     </section>
   </div>
@@ -178,6 +169,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import LinkButton from "../components/ui/LinkButton.vue";
 
 // Sample data - replace with API calls in production
 const events = ref([

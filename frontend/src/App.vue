@@ -1,6 +1,8 @@
 <template>
   <AppHeader v-if="route && !hideLayoutForRoutes.includes(route.name)" />
-  <div class="container w-full flex flex-col min-h-screen">
+  <div
+    class="container w-full flex flex-col min-h-screen dark:bg-gray-900 dark:text-gray-200"
+  >
     <main class="">
       <router-view />
     </main>

@@ -1,13 +1,15 @@
 <template>
   <div
-    class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8"
+    class="min-h-screen flex items-center justify-center dark:bg-gray-900 bg-gray-50 py-12 px-4 sm:px-6 lg:px-8"
   >
     <div class="max-w-md w-full space-y-8">
       <div>
         <a href="/">
           <img class="mx-auto h-12 w-auto" src="@/assets/logo.jpg" alt="Logo" />
         </a>
-        <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+        <h2
+          class="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white"
+        >
           Create a new account
         </h2>
         <p class="mt-2 text-center text-sm text-gray-600">
