@@ -15,14 +15,17 @@
             <NavLink to="/">Home</NavLink>
             <NavLink to="/events" name="Events">Events</NavLink>
             <NavLink to="/categories" name="Categories">Categories</NavLink>
-            <router-link
+            <!-- <router-link
               v-if="isLoggedIn"
               to="/my-bookings"
               class="hover:text-indigo-600 inline-flex items-center px-1 py-2 text-sm font-medium border-b-2 border-transparent transition-colors duration-200"
               active-class="border-indigo-600 text-indigo-600"
             >
               My Bookings
-            </router-link>
+            </router-link> -->
+            <NavLink v-if="isLoggedIn" to="/my-bookings" name="My Bookings"
+              >My Bookings</NavLink
+            >
           </nav>
         </div>
 
