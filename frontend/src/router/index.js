@@ -7,6 +7,7 @@ import RegisterView from "@/views/auth/RegisterView.vue";
 import VerifyEmailView from "@/views/auth/VerifyEmailView.vue";
 import ForgotPasswordView from "@/views/auth/ForgotPasswordView.vue";
 import ResetPasswordView from "@/views/auth/ResetPasswordView.vue";
+import EventsView from "../views/events/EventsView.vue";
 
 const routes = [
   {
@@ -42,6 +43,11 @@ const routes = [
     name: "reset-password",
     component: ResetPasswordView,
     meta: { guest: true },
+  },
+  {
+    path: "/events",
+    name: "events",
+    component: EventsView,
   },
 ];
 

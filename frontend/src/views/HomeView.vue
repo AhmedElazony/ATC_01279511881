@@ -58,53 +58,7 @@
           class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
         >
           <!-- Event Cards -->
-          <div
-            v-for="event in events"
-            :key="event.id"
-            class="bg-white dark:bg-gray-700 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow"
-          >
-            <div
-              class="aspect-video dark:bg-gray-500 dark:text-white bg-gray-200 flex items-center justify-center text-xl font-semibold text-gray-400"
-            >
-              <img
-                v-if="event.image_url"
-                :src="event.image_url"
-                alt="Event Image"
-                class="w-full h-full object-cover"
-              />
-              <span v-else>No Image</span>
-            </div>
-            <div class="p-6">
-              <div class="flex justify-between items-start">
-                <div>
-                  <h3
-                    class="text-xl font-bold text-gray-900 dark:text-gray-200"
-                  >
-                    {{ event.name }}
-                  </h3>
-                  <p class="text-gray-500 mt-1 dark:text-gray-300">
-                    {{ formatDate(event.date) }}
-                  </p>
-                </div>
-                <span
-                  class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-medium"
-                >
-                  {{ event.category.name }}
-                </span>
-              </div>
-              <p class="mt-3 text-gray-600 line-clamp-3 dark:text-gray-300">
-                {{ event.description }}
-              </p>
-              <div class="mt-4 flex justify-between items-center">
-                <p class="text-indigo-600 font-bold dark:text-indigo-400">
-                  {{ formatPrice(event.price) }}
-                </p>
-                <LinkButton :to="`/events/${event.id}`">
-                  View Details</LinkButton
-                >
-              </div>
-            </div>
-          </div>
+          <EventCard v-for="event in events" :event="event" />
         </div>
 
         <div class="mt-12 text-center">
@@ -181,6 +135,7 @@ import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import LinkButton from "../components/ui/LinkButton.vue";
 import api from "../services/api";
+import EventCard from "../components/app/EventCard.vue";
 
 // Use ref for events data that will be populated from API
 const events = ref([]);
