@@ -10,6 +10,6 @@ Route::group(['prefix' => 'events', 'as' => 'events.'], function () {
     Route::get('/categories', CategoryController::class)
         ->name('categories');
 
-    Route::get('/{event}', [EventController::class, 'show'])
+    Route::get('/{event}/show', [EventController::class, 'show'])
         ->name('show');
 });

@@ -9,4 +9,8 @@ Route::group(['prefix' => 'v1', 'as' => 'v1.'], function () {
 
     Route::get('/home', HomeController::class)
         ->name('home');
+
+    Route::group(['middleware' => 'auth:sanctum'], function () {
+        require __DIR__ . '/v1/booking.routes.php';
+    });
 });
