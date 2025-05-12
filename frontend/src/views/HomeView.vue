@@ -60,29 +60,7 @@
           <!-- Event Cards -->
           <EventCard v-for="event in events" :event="event" />
         </div>
-
-        <div class="mt-12 text-center">
-          <router-link
-            to="/events"
-            class="inline-flex items-center text-indigo-600 hover:text-indigo-800 font-medium"
-          >
-            View all events
-            <svg
-              class="ml-2 w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 5l7 7-7 7"
-              ></path>
-            </svg>
-          </router-link>
-        </div>
+        <SeeMoreLink to="/events">View All Events</SeeMoreLink>
       </div>
     </section>
 
@@ -108,10 +86,11 @@
               {{ category.name }}
             </h3>
             <p class="text-sm text-gray-500 mt-1 dark:text-gray-300">
-              {{ category.count }} events
+              {{ category.events_count }} events
             </p>
           </div>
         </div>
+        <SeeMoreLink to="/categories">View All Categories</SeeMoreLink>
       </div>
     </section>
 
@@ -136,31 +115,13 @@ import { useRouter } from "vue-router";
 import LinkButton from "../components/ui/LinkButton.vue";
 import api from "../services/api";
 import EventCard from "../components/app/EventCard.vue";
+import SeeMoreLink from "../components/ui/SeeMoreLink.vue";
 
 // Use ref for events data that will be populated from API
 const events = ref([]);
 const categories = ref([]);
 const isLoading = ref(true);
 const categoriesLoading = ref(true);
-
-// Format date helper function
-const formatDate = (dateString) => {
-  const options = {
-    weekday: "short",
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  };
-  return new Date(dateString).toLocaleDateString("en-US", options);
-};
-
-// Format price helper function
-const formatPrice = (price) => {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-  }).format(price);
-};
 
 // Fetch events and categories on component mount
 onMounted(async () => {
@@ -174,7 +135,7 @@ onMounted(async () => {
       id: category.id,
       name: category.name,
       icon: category.icon || "📅", // Use a default icon if none provided
-      count: category.events_count || 0,
+      events_count: category.events_count || 0,
     }));
   } catch (error) {
     console.error("Error fetching data:", error);

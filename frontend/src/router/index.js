@@ -8,6 +8,7 @@ import VerifyEmailView from "@/views/auth/VerifyEmailView.vue";
 import ForgotPasswordView from "@/views/auth/ForgotPasswordView.vue";
 import ResetPasswordView from "@/views/auth/ResetPasswordView.vue";
 import EventsView from "../views/events/EventsView.vue";
+import CategoriesView from "../views/events/CategoriesView.vue";
 
 const routes = [
   {
@@ -48,6 +49,11 @@ const routes = [
     path: "/events",
     name: "events",
     component: EventsView,
+  },
+  {
+    path: "/categories",
+    name: "categories",
+    component: CategoriesView,
   },
 ];
 
