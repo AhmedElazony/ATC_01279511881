@@ -18,7 +18,7 @@ class CategoryResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'icon' => $this->icon,
-            'events_count' => $this->whenLoaded('events', fn() => $this->events_count),
+            'events_count' => $this->events_count,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
         ];
     }
