@@ -15,7 +15,7 @@ class EventController extends ApiController
                 Event::with(['category', 'tags'])
                     ->filter(request()->only(['q', 'category_id']))
                     ->latest()
-                    ->paginate(3)
+                    ->paginate(9)
             ),
         );
     }
