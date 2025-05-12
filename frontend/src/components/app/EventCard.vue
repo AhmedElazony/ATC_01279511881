@@ -35,7 +35,7 @@
         <span
           class="bg-indigo-100 text-indigo-800 text-xs px-3 py-1 rounded-full font-medium dark:bg-indigo-900 dark:text-indigo-200"
         >
-          {{ event.category.name }}
+          {{ event.category?.name }}
         </span>
       </div>
     </div>
@@ -99,25 +99,105 @@
           {{ event.price > 0 ? formatPrice(event.price) : "Free" }}
         </div>
 
-        <!-- View details button -->
-        <router-link
-          :to="`/events/${event.id}`"
-          class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
-        >
-          View Details
-        </router-link>
+        <div class="flex space-x-2">
+          <!-- Book now button (only shown for logged in users) -->
+          <button
+            v-if="isAuthenticated"
+            @click="bookEvent"
+            :disabled="isBooked || isBooking"
+            :class="[
+              'px-4 py-2 border border-transparent text-sm font-medium rounded-md transition-colors',
+              isBooked
+                ? 'bg-green-600 text-white cursor-not-allowed opacity-80'
+                : isBooking
+                ? 'bg-indigo-400 text-white cursor-wait'
+                : 'bg-indigo-600 hover:bg-indigo-700 text-white',
+            ]"
+          >
+            <span v-if="isBooking">Booking...</span>
+            <span v-else-if="isBooked">Booked</span>
+            <span v-else>Book Now</span>
+          </button>
+
+          <!-- View details button -->
+          <router-link
+            :to="`/events/${event.id}`"
+            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
+          >
+            View Details
+          </router-link>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed } from "vue";
-defineProps({
+import { ref, computed, onMounted } from "vue";
+import { useAuthStore } from "@/stores/auth";
+import api from "@/services/api";
+import { formatDate, formatPrice } from "@/utils/formatters";
+
+const props = defineProps({
   event: {
     type: Object,
     required: true,
   },
 });
-import { formatDate, formatPrice } from "@/utils/formatters";
+
+const authStore = useAuthStore();
+const isAuthenticated = computed(() => authStore.isLoggedIn());
+const isBooked = ref(false);
+const isBooking = ref(false);
+
+// Check if user has booked this event
+onMounted(async () => {
+  // if (isAuthenticated.value) {
+  // try {
+  //   // You might need to adjust this endpoint based on your API
+  //   const response = await api.get(`/events/${props.event.id}/check-booking`);
+  //   isBooked.value = response.data.booked || false;
+  // } catch (error) {
+  //   console.error("Error checking booking status:", error);
+  //   // If the endpoint doesn't exist yet, we can check the user's bookings list
+  //   try {
+  //     const bookingsResponse = await api.get("/bookings");
+  //     if (bookingsResponse.data && bookingsResponse.data.data) {
+  //       // Check if this event exists in the user's bookings
+  //       isBooked.value = bookingsResponse.data.data.some(
+  //         (booking) => booking.event_id === props.event.id
+  //       );
+  //     }
+  //   } catch (bookingError) {
+  //     console.error("Error fetching user bookings:", bookingError);
+  //   }
+  //   }
+  // }
+});
+
+// Book the event
+const bookEvent = async () => {
+  if (!isAuthenticated.value || isBooked.value || isBooking.value) return;
+
+  try {
+    isBooking.value = true;
+    // You might need to adjust this endpoint based on your API
+    await api.post(`/events/${props.event.id}/book`);
+    isBooked.value = true;
+  } catch (error) {
+    console.error("Error booking event:", error);
+    alert("Failed to book the event. Please try again.");
+  } finally {
+    isBooking.value = false;
+  }
+};
 </script>
+
+<style scoped>
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+</style>
