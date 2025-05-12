@@ -116,12 +116,15 @@ export const useAuthStore = defineStore("auth", () => {
     }
   }
 
-  async function sendVerificationEmail(email) {
-    return await api.post("/auth/send-verification-email", { email });
+  async function sendVerificationOtp(email, type) {
+    return await api.post("/auth/send-verification-otp", { email, type });
   }
 
   async function forgotPassword(email) {
-    const response = await api.post("/auth/forgot-password", { email });
+    const response = await api.post("/auth/forgot-password", {
+      email,
+      type: "password_reset",
+    });
     if (response.status === 200) {
       tempEmail.value = email;
     }
@@ -145,7 +148,7 @@ export const useAuthStore = defineStore("auth", () => {
     logout,
     verifyEmail,
     fetchUser,
-    sendVerificationEmail,
+    sendVerificationOtp,
     forgotPassword,
     resetPassword,
     isLoggedIn,

@@ -11,8 +11,8 @@
           Reset your password
         </h2>
         <p class="mt-2 text-center text-sm text-gray-600 dark:text-gray-300">
-          Enter your email address and we'll send you a link to reset your
-          password
+          Enter your email address and we'll send you an otp to verify your
+          email
         </p>
       </div>
 
@@ -93,19 +93,10 @@
               variant="primary"
               class="w-full"
               :loading="loading"
-              >Send Reset Link</AppButton
+              >Send Reset Otp</AppButton
             >
           </div>
         </form>
-
-        <div v-else class="mt-6">
-          <button
-            @click="resetForm"
-            class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-indigo-600 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            Send another reset link
-          </button>
-        </div>
 
         <div class="mt-6">
           <div class="relative">
@@ -185,12 +176,5 @@ const sendResetLink = async () => {
   } finally {
     loading.value = false;
   }
-};
-
-const resetForm = () => {
-  form.email = "";
-  successMessage.value = "";
-  errorMessage.value = "";
-  errors.email = "";
 };
 </script>

@@ -15,8 +15,11 @@ class OtpService
 
     public function send(User $user, string $type = 'email_verification')
     {
-        $otp = $this->generate();
-        $this->saveInCache($user, $otp);
+        $otp = $this->getOtpFromCache($user);
+        if (!$otp) {
+            $otp = $this->generate();
+            $this->saveInCache($user, $otp);
+        }
 
         Mail::to($user)->send(new OtpMail(
             $user,
@@ -27,6 +30,11 @@ class OtpService
         ));
 
         return $otp;
+    }
+
+    protected function getOtpFromCache(?User $user): ?string
+    {
+        return cache()->get('otp_for_' . $user?->email);
     }
 
     protected function generate()
@@ -43,7 +51,7 @@ class OtpService
     {
         $user = User::where('email', $email)->first();
 
-        $storedOtp = cache()->get('otp_for_' . $user?->email);
+        $storedOtp = $this->getOtpFromCache($user);
 
         if (!$user || !$storedOtp || $storedOtp !== $otp) {
             return [

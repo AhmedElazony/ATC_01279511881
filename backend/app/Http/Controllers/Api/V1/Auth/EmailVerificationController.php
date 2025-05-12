@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Auth;
 
 use Api\Support\Http\Controllers\ApiController;
+use Api\Support\Http\Traits\VerificationOtpSender;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Services\OtpService;
@@ -12,21 +13,16 @@ use Illuminate\Validation\ValidationException;
 
 class EmailVerificationController extends ApiController
 {
+    use VerificationOtpSender;
     public function __construct(protected OtpService $otpService)
     {
     }
 
     public function sendVerificationOtp(Request $request)
     {
-        $user = $request->user();
+        $this->sendOtp($request, 'email_verification', $this->otpService);
 
-        if ($user->hasVerifiedEmail()) {
-            return $this->success('Email already verified');
-        }
-
-        $this->otpService->send($user);
-
-        return $this->success('Verification OTP sent to your email');
+        return $this->success('Verification OTP sent successfully!');
     }
 
     public function verify(Request $request)

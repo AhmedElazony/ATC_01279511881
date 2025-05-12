@@ -44,6 +44,35 @@
           </div>
         </div>
 
+        <!-- Success message for OTP resend -->
+        <div
+          v-if="resendSuccessMessage && !successMessage"
+          class="rounded-md bg-green-50 p-4 mb-4"
+        >
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <svg
+                class="h-5 w-5 text-green-400"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </div>
+            <div class="ml-3">
+              <h3 class="text-sm font-medium text-green-800">
+                {{ resendSuccessMessage }}
+              </h3>
+            </div>
+          </div>
+        </div>
+
         <div v-if="errorMessage" class="rounded-md bg-red-50 p-4 mb-4">
           <div class="flex">
             <div class="flex-shrink-0">
@@ -182,6 +211,13 @@
               </span>
               Reset Password
             </button>
+            <button
+              type="button"
+              @click="resendCode"
+              class="mt-2 w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-indigo-600 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              resend otp?
+            </button>
           </div>
         </form>
 
@@ -212,7 +248,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from "vue";
+import { ref, reactive } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useAuthStore } from "../../stores/auth";
 
@@ -225,6 +261,7 @@ const form = reactive({
   otp: "",
   password: "",
   password_confirmation: "",
+  type: "password_reset",
 });
 
 const errors = reactive({
@@ -237,17 +274,7 @@ const errors = reactive({
 const loading = ref(false);
 const errorMessage = ref("");
 const successMessage = ref("");
-
-// Extract token and email from query parameters if available
-onMounted(() => {
-  if (route.query.email) {
-    form.email = route.query.email;
-  }
-
-  if (route.query.otp) {
-    form.otp = route.query.otp;
-  }
-});
+const resendSuccessMessage = ref("");
 
 const resetPassword = async () => {
   // Reset errors
@@ -306,6 +333,22 @@ const resetPassword = async () => {
         error.response?.data?.message ||
         "Something went wrong. Please try again.";
     }
+  } finally {
+    loading.value = false;
+  }
+};
+
+const resendCode = async () => {
+  if (loading.value) return;
+
+  try {
+    loading.value = true;
+    await authStore.sendVerificationOtp(form.email, form.type);
+    resendSuccessMessage.value = "Verification code sent successfully!";
+    errorMessage.value = "";
+  } catch (error) {
+    errorMessage.value =
+      error.response?.data?.message || "Failed to resend verification code.";
   } finally {
     loading.value = false;
   }

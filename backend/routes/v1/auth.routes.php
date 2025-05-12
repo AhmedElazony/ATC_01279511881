@@ -20,9 +20,9 @@ Route::group(['prefix' => 'auth', 'as' => 'auth.'], function () {
         ->middleware(['auth:sanctum', 'throttle:3,1'])
         ->name('verify-email');
 
-    Route::post('send-verification-email', [EmailVerificationController::class, 'sendVerificationEmail'])
-        ->middleware(['auth:sanctum', 'throttle:2,1'])
-        ->name('send-verification-email');
+    Route::post('send-verification-otp', [EmailVerificationController::class, 'sendVerificationOtp'])
+        ->middleware(['throttle:2,1'])
+        ->name('send-verification-otp');
 
     Route::post('forgot-password', [PasswordResetController::class, 'forgotPassword'])
         ->middleware('throttle:2,1')

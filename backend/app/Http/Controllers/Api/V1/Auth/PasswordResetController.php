@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Auth;
 
 use Api\Support\Http\Controllers\ApiController;
+use Api\Support\Http\Traits\VerificationOtpSender;
 use App\Models\User;
 use App\Services\OtpService;
 use Illuminate\Http\Request;
@@ -12,25 +13,16 @@ use Illuminate\Validation\ValidationException;
 
 class PasswordResetController extends ApiController
 {
-    protected $otpService;
+    use VerificationOtpSender;
 
-    public function __construct(OtpService $otpService)
+    public function __construct(protected OtpService $otpService)
     {
-        $this->otpService = $otpService;
     }
 
     // Request password reset OTP
     public function forgotPassword(Request $request)
     {
-        $request->validate([
-            'email' => 'required|email|max:255',
-        ]);
-
-        $user = User::where('email', $request->email)->first();
-
-        if ($user) {
-            $this->otpService->send($user, 'password_reset');
-        }
+        $this->sendOtp($request, 'password_reset', $this->otpService);
 
         return $this->success('if this email is registered, you will receive a password reset OTP shortly');
     }

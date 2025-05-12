@@ -221,20 +221,20 @@ const verifyEmail = async () => {
   }
 };
 
-// const resendCode = async () => {
-//   if (resendLoading.value) return;
+const resendCode = async () => {
+  if (resendLoading.value) return;
 
-//   try {
-//     resendLoading.value = true;
-//     await authStore.sendVerificationEmail(userEmail.value);
-//     successMessage.value = "Verification code sent successfully!";
-//     errorMessage.value = "";
-//   } catch (error) {
-//     successMessage.value = "";
-//     errorMessage.value =
-//       error.response?.data?.message || "Failed to send verification code";
-//   } finally {
-//     resendLoading.value = false;
-//   }
-// };
+  try {
+    resendLoading.value = true;
+    await authStore.sendVerificationOtp(userEmail.value, "email_verification");
+    successMessage.value = "Verification code sent successfully!";
+    errorMessage.value = "";
+  } catch (error) {
+    successMessage.value = "";
+    errorMessage.value =
+      error.response?.data?.message || "Failed to send verification code";
+  } finally {
+    resendLoading.value = false;
+  }
+};
 </script>
