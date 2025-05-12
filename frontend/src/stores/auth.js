@@ -7,10 +7,8 @@ export const useAuthStore = defineStore("auth", () => {
   const user = ref(null);
   const token = ref(localStorage.getItem("token") || null);
   // Add a separate email ref for registration flow
-  const registrationEmail = ref(
-    localStorage.getItem("registrationEmail") || null
-  );
-  const tempEmail = ref(localStorage.getItem("tempEmail") || null);
+  const registrationEmail = ref("");
+  const tempEmail = ref("");
 
   // Load the token from localStorage
   if (token.value) {
@@ -24,7 +22,6 @@ export const useAuthStore = defineStore("auth", () => {
 
       // Store the email for verification flow
       registrationEmail.value = formData.email;
-      localStorage.setItem("registrationEmail", formData.email);
 
       // Check if the response contains a token
       if (response.data && response.data.data.token) {
@@ -127,7 +124,6 @@ export const useAuthStore = defineStore("auth", () => {
     const response = await api.post("/auth/forgot-password", { email });
     if (response.status === 200) {
       tempEmail.value = email;
-      localStorage.setItem("tempEmail", email);
     }
 
     return response;

@@ -167,9 +167,9 @@ onMounted(() => {
   } else {
     console.error("No email found in any location");
     errorMessage.value = "Email information missing. Please register first.";
-    // setTimeout(() => {
-    //   router.push("/register");
-    // }, 3000);
+    setTimeout(() => {
+      router.push("/register");
+    }, 3000);
   }
 });
 
@@ -199,12 +199,9 @@ const verifyEmail = async () => {
 
     successMessage.value = "Email verified successfully!";
 
-    // Only redirect if we have a successful response
-    if (response && response.success) {
-      setTimeout(() => {
-        router.push("/");
-      }, 2000);
-    }
+    setTimeout(() => {
+      router.push("/");
+    }, 2000);
   } catch (error) {
     console.error("Verification error details:", {
       error,

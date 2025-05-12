@@ -221,7 +221,7 @@ const router = useRouter();
 const authStore = useAuthStore();
 
 const form = reactive({
-  email: localStorage.getItem("tempEmail") || authStore.tempEmail,
+  email: authStore.tempEmail,
   otp: "",
   password: "",
   password_confirmation: "",
