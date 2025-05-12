@@ -21,7 +21,7 @@ class HomeController extends ApiController
                     ->get()
             ),
             'categories' => CategoryResource::collection(
-                Category::withCount('events')->limit(10)->get()
+                Category::withCount('events')->limit(8)->get()
             ),
         ]);
     }

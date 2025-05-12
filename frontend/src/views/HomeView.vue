@@ -28,7 +28,11 @@
           <div
             class="bg-indigo-500 rounded-lg aspect-video shadow-xl flex items-center justify-center text-4xl font-bold"
           >
-            Event Image
+            <img
+              src="@/assets/logo.jpg"
+              alt="Hero Image"
+              class="w-full h-full object-cover rounded-lg"
+            />
           </div>
         </div>
       </div>
@@ -62,7 +66,13 @@
             <div
               class="aspect-video dark:bg-gray-500 dark:text-white bg-gray-200 flex items-center justify-center text-xl font-semibold text-gray-400"
             >
-              Event Image
+              <img
+                v-if="event.image_url"
+                :src="event.image_url"
+                alt="Event Image"
+                class="w-full h-full object-cover"
+              />
+              <span v-else>No Image</span>
             </div>
             <div class="p-6">
               <div class="flex justify-between items-start">
@@ -70,16 +80,16 @@
                   <h3
                     class="text-xl font-bold text-gray-900 dark:text-gray-200"
                   >
-                    {{ event.title }}
+                    {{ event.name }}
                   </h3>
                   <p class="text-gray-500 mt-1 dark:text-gray-300">
-                    {{ formatDate(event.start_date) }}
+                    {{ formatDate(event.date) }}
                   </p>
                 </div>
                 <span
                   class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-medium"
                 >
-                  {{ event.category }}
+                  {{ event.category.name }}
                 </span>
               </div>
               <p class="mt-3 text-gray-600 line-clamp-3 dark:text-gray-300">
@@ -170,50 +180,13 @@
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import LinkButton from "../components/ui/LinkButton.vue";
+import api from "../services/api";
 
-// Sample data - replace with API calls in production
-const events = ref([
-  {
-    id: 1,
-    title: "Tech Conference 2025",
-    description:
-      "Join us for the biggest tech conference of the year with speakers from top companies sharing insights on AI, blockchain, and more.",
-    start_date: "2025-06-15T09:00:00",
-    category: "Technology",
-    price: 299.99,
-  },
-  {
-    id: 2,
-    title: "Summer Music Festival",
-    description:
-      "A two-day music festival featuring top artists from around the world. Food, drinks, and camping available.",
-    start_date: "2025-07-22T16:00:00",
-    category: "Music",
-    price: 149.5,
-  },
-  {
-    id: 3,
-    title: "Business Leadership Workshop",
-    description:
-      "Develop your leadership skills with this interactive workshop led by industry experts.",
-    start_date: "2025-05-10T10:00:00",
-    category: "Business",
-    price: 79.99,
-  },
-]);
-
-const categories = ref([
-  { id: 1, name: "Music", count: 42, icon: "🎵" },
-  { id: 2, name: "Technology", count: 18, icon: "💻" },
-  { id: 3, name: "Sports", count: 24, icon: "⚽" },
-  { id: 4, name: "Food & Drink", count: 15, icon: "🍷" },
-  { id: 5, name: "Arts", count: 32, icon: "🎨" },
-  { id: 6, name: "Business", count: 12, icon: "💼" },
-  { id: 7, name: "Wellness", count: 8, icon: "🧘" },
-  { id: 8, name: "Education", count: 16, icon: "📚" },
-]);
-
-const isLoading = ref(false);
+// Use ref for events data that will be populated from API
+const events = ref([]);
+const categories = ref([]);
+const isLoading = ref(true);
+const categoriesLoading = ref(true);
 
 // Format date helper function
 const formatDate = (dateString) => {
@@ -234,19 +207,22 @@ const formatPrice = (price) => {
   }).format(price);
 };
 
-// In a real application, you would fetch events from an API
+// Fetch events and categories on component mount
 onMounted(async () => {
   try {
+    // Fetch featured events
     isLoading.value = true;
-    // const response = await fetch('/api/events/featured');
-    // events.value = await response.json();
-
-    // Simulating API delay
-    await new Promise((resolve) => setTimeout(resolve, 500));
-
-    // Using sample data for now
+    categoriesLoading.value = true;
+    const response = await api.get("/home");
+    events.value = response.data.data.events || [];
+    categories.value = response.data.data.categories.map((category) => ({
+      id: category.id,
+      name: category.name,
+      icon: category.icon || "📅", // Use a default icon if none provided
+      count: category.events_count || 0,
+    }));
   } catch (error) {
-    console.error("Error fetching events:", error);
+    console.error("Error fetching data:", error);
   } finally {
     isLoading.value = false;
   }
