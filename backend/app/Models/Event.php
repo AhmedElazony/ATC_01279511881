@@ -37,7 +37,13 @@ class Event extends Model
         $query->when(
             $filters['category_id'] ?? null,
             fn() => $query->where('category_id', $filters['category_id'])
-        );
+        )->when(
+                $filters['q'] ?? null,
+                fn() => $query->where(function ($query) use ($filters) {
+                    $query->where('name', 'like', "%{$filters['q']}%")
+                        ->orWhere('description', 'like', "%{$filters['q']}%");
+                })
+            );
     }
 
     #[Scope()]
