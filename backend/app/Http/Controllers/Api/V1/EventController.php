@@ -13,9 +13,9 @@ class EventController extends ApiController
         return $this->success(
             EventResource::paginate(
                 Event::with(['category', 'tags'])
-                    ->filter(['category_id' => request()->only('category_id')])
+                    ->filter(request()->only(['q', 'category_id']))
                     ->latest()
-                    ->paginate()
+                    ->paginate(3)
             ),
         );
     }
