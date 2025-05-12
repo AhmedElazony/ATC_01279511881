@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -27,5 +29,14 @@ class Event extends Model
     public function tags(): BelongsToMany
     {
         return $this->belongsToMany(Tag::class);
+    }
+
+    #[Scope()]
+    public function filter(Builder $query, array $filters): void
+    {
+        $query->when(
+            $filters['category_id'] ?? null,
+            fn() => $query->where('category_id', $filters['category_id'])
+        );
     }
 }
