@@ -39,4 +39,10 @@ class Event extends Model
             fn() => $query->where('category_id', $filters['category_id'])
         );
     }
+
+    #[Scope()]
+    public function featured(Builder $query): void
+    {
+        $query->where('featured', true);
+    }
 }
