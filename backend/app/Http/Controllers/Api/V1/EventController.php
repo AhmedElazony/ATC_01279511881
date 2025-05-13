@@ -3,21 +3,20 @@
 namespace App\Http\Controllers\Api\V1;
 
 use Api\Support\Http\Controllers\ApiController;
+use App\Actions\GetAllEventsWithBookingInfoAction;
 use App\Http\Resources\EventResource;
 use App\Models\Event;
+use Illuminate\Support\Facades\DB;
 
 class EventController extends ApiController
 {
     public function index()
     {
-        return $this->success(
-            EventResource::paginate(
-                Event::with(['category', 'tags'])
-                    ->filter(request()->only(['q', 'category_id']))
-                    ->latest()
-                    ->paginate(9)
-            ),
-        );
+        $events = (new GetAllEventsWithBookingInfoAction(
+            auth('sanctum')->user()?->id
+        ))->execute();
+
+        return $this->success(EventResource::paginate($events));
     }
 
     public function show(Event $event)

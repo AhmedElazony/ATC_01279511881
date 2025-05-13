@@ -17,6 +17,7 @@ class HomeController extends ApiController
                 Event::with(['category', 'tags'])
                     ->latest()
                     ->featured()
+                    ->withBookingInfo(auth('sanctum')->user()?->id)
                     ->limit(6)
                     ->get()
             ),

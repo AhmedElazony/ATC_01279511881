@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use Api\Support\Traits\ApiResource\WithPagination;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 
 class EventResource extends JsonResource
 {
@@ -27,6 +28,7 @@ class EventResource extends JsonResource
             'category' => CategoryResource::make($this->whenLoaded('category')),
             'tags' => TagResource::collection($this->whenLoaded('tags')),
             'added_at' => $this->created_at->format('Y-m-d H:i:s'),
+            'booked_by_user' => $this->booked_by_user
         ];
     }
 }

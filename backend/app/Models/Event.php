@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\DB;
 
 class Event extends Model
 {
@@ -31,6 +32,11 @@ class Event extends Model
         return $this->belongsToMany(Tag::class);
     }
 
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
+
     #[Scope()]
     public function filter(Builder $query, array $filters): void
     {
@@ -48,5 +54,19 @@ class Event extends Model
     public function featured(Builder $query): void
     {
         $query->where('featured', true);
+    }
+
+    #[Scope()]
+    public function withBookingInfo(Builder $query, ?string $userId): void
+    {
+        if (isset($userId)) {
+            $query->addSelect([
+                'booked_by_user' => DB::table('bookings')
+                    ->whereColumn('bookings.event_id', 'events.id')
+                    ->where('bookings.user_id', $userId)
+                    ->select(DB::raw('COUNT(*) > 0'))
+                    ->limit(1)
+            ]);
+        }
     }
 }
