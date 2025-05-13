@@ -3,7 +3,7 @@
     <div class="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
       <div class="xl:grid xl:grid-cols-3 xl:gap-8">
         <div class="space-y-8 xl:col-span-1">
-          <img class="h-10" src="./assets/logo.svg" alt="Company name" />
+          <img class="h-10" src="@/assets/logo.jpg" alt="EventSystem" />
           <p class="text-gray-500 text-base">
             Making the world a better place through connecting people at amazing
             events.
@@ -81,14 +81,6 @@
                     Booking
                   </a>
                 </li>
-                <li>
-                  <a
-                    href="#"
-                    class="text-base text-gray-500 hover:text-gray-900"
-                  >
-                    Venues
-                  </a>
-                </li>
               </ul>
             </div>
             <div class="mt-12 md:mt-0">
@@ -100,7 +92,8 @@
               <ul role="list" class="mt-4 space-y-4">
                 <li>
                   <a
-                    href="#"
+                    href="https://ahmedelazony.me"
+                    target="_blank"
                     class="text-base text-gray-500 hover:text-gray-900"
                   >
                     Contact
@@ -111,83 +104,7 @@
                     href="#"
                     class="text-base text-gray-500 hover:text-gray-900"
                   >
-                    Help Center
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    class="text-base text-gray-500 hover:text-gray-900"
-                  >
-                    Privacy
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div class="md:grid md:grid-cols-2 md:gap-8">
-            <div>
-              <h3
-                class="text-sm font-semibold text-gray-400 tracking-wider uppercase"
-              >
-                Company
-              </h3>
-              <ul role="list" class="mt-4 space-y-4">
-                <li>
-                  <a
-                    href="#"
-                    class="text-base text-gray-500 hover:text-gray-900"
-                  >
                     About
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    class="text-base text-gray-500 hover:text-gray-900"
-                  >
-                    Blog
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    class="text-base text-gray-500 hover:text-gray-900"
-                  >
-                    Careers
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div class="mt-12 md:mt-0">
-              <h3
-                class="text-sm font-semibold text-gray-400 tracking-wider uppercase"
-              >
-                Legal
-              </h3>
-              <ul role="list" class="mt-4 space-y-4">
-                <li>
-                  <a
-                    href="#"
-                    class="text-base text-gray-500 hover:text-gray-900"
-                  >
-                    Terms
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    class="text-base text-gray-500 hover:text-gray-900"
-                  >
-                    Privacy
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    class="text-base text-gray-500 hover:text-gray-900"
-                  >
-                    Cookies
                   </a>
                 </li>
               </ul>
@@ -197,7 +114,13 @@
       </div>
       <div class="mt-12 border-t border-gray-200 pt-8">
         <p class="text-base text-gray-400 xl:text-center">
-          &copy; {{ currentYear }} Your Company, Inc. All rights reserved.
+          &copy; {{ currentYear }} Made with ❤️ by
+          <a
+            href="https://ahmedelazony.me"
+            target="_blank"
+            class="text-blue-500 hover:text-blue-600"
+            >AhmedElazony</a
+          >. All rights reserved.
         </p>
       </div>
     </div>
