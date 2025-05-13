@@ -22,6 +22,11 @@ class Event extends Model
         'category_id',
     ];
 
+    protected $casts = [
+        'featured' => 'boolean',
+        'date' => 'datetime',
+    ];
+
     public function category()
     {
         return $this->belongsTo(Category::class);

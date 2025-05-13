@@ -13,4 +13,8 @@ Route::group(['prefix' => 'v1', 'as' => 'v1.'], function () {
     Route::group(['middleware' => 'auth:sanctum'], function () {
         require __DIR__ . '/v1/booking.routes.php';
     });
+
+    Route::group(['middleware' => ['auth:sanctum', 'admin']], function () {
+        require __DIR__ . '/v1/admin.routes.php';
+    });
 });
