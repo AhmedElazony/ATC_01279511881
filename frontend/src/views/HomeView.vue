@@ -96,7 +96,10 @@
     </section>
 
     <!-- Call to Action -->
-    <section class="py-16 bg-indigo-700 text-white dark:bg-blue-900">
+    <section
+      v-if="!isAuthenticated"
+      class="py-16 bg-indigo-700 text-white dark:bg-blue-900"
+    >
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h2 class="text-3xl font-bold mb-4">
           Ready to discover amazing events?
