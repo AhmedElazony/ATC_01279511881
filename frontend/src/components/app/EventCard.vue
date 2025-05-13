@@ -41,9 +41,21 @@
     </div>
 
     <div class="p-6">
-      <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">
-        {{ event.name }}
-      </h3>
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">
+          {{ event.name }}
+        </h3>
+        <!-- Tags -->
+        <div class="flex flex-wrap gap-2 mb-4">
+          <span
+            v-for="tag in event.tags"
+            :key="tag.id"
+            class="bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded-full dark:bg-gray-600 dark:text-gray-200"
+          >
+            {{ tag.name }}
+          </span>
+        </div>
+      </div>
 
       <!-- Date and time -->
       <div class="flex items-center mb-2 text-gray-600 dark:text-gray-300">
@@ -152,28 +164,6 @@ const isBooking = ref(false);
 
 // Check if user has booked this event
 onMounted(async () => {
-  // if (isAuthenticated.value) {
-  // try {
-  //   // You might need to adjust this endpoint based on your API
-  //   const response = await api.get(`/events/${props.event.id}/check-booking`);
-  //   isBooked.value = response.data.booked || false;
-  // } catch (error) {
-  //   console.error("Error checking booking status:", error);
-  //   // If the endpoint doesn't exist yet, we can check the user's bookings list
-  //   try {
-  //     const bookingsResponse = await api.get("/bookings");
-  //     if (bookingsResponse.data && bookingsResponse.data.data) {
-  //       // Check if this event exists in the user's bookings
-  //       isBooked.value = bookingsResponse.data.data.some(
-  //         (booking) => booking.event_id === props.event.id
-  //       );
-  //     }
-  //   } catch (bookingError) {
-  //     console.error("Error fetching user bookings:", bookingError);
-  //   }
-  //   }
-  // }
-
   if (isAuthenticated.value) {
     try {
       isBooked.value = props.event.booked_by_user || false;

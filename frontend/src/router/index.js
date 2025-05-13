@@ -9,6 +9,9 @@ import ForgotPasswordView from "@/views/auth/ForgotPasswordView.vue";
 import ResetPasswordView from "@/views/auth/ResetPasswordView.vue";
 import EventsView from "../views/events/EventsView.vue";
 import CategoriesView from "../views/events/CategoriesView.vue";
+import MyBookingsView from "../views/bookings/MyBookingsView.vue";
+import EventDetailsView from "../views/events/EventDetailsView.vue";
+import BookingSuccessView from "../views/bookings/BookingSuccessView.vue";
 
 const routes = [
   {
@@ -54,6 +57,23 @@ const routes = [
     path: "/categories",
     name: "categories",
     component: CategoriesView,
+  },
+  {
+    path: "/bookings",
+    name: "bookings",
+    component: MyBookingsView,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/events/:id",
+    name: "event-details",
+    component: EventDetailsView,
+  },
+  {
+    path: "/congratulations",
+    name: "congratulations",
+    component: BookingSuccessView,
+    meta: { requiresAuth: true },
   },
 ];
 

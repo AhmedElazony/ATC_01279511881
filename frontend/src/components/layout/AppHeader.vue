@@ -15,7 +15,7 @@
             <NavLink to="/">Home</NavLink>
             <NavLink to="/events" name="Events">Events</NavLink>
             <NavLink to="/categories" name="Categories">Categories</NavLink>
-            <NavLink v-if="isLoggedIn" to="/my-bookings" name="My Bookings"
+            <NavLink v-if="isLoggedIn" to="/bookings" name="My Bookings"
               >My Bookings</NavLink
             >
           </nav>
@@ -256,10 +256,10 @@
         </router-link>
         <router-link
           v-if="isLoggedIn"
-          to="/my-bookings"
+          to="/bookings"
           class="block pl-3 pr-4 py-2 hover:bg-gray-50"
           :class="
-            $route.path.includes('/my-bookings')
+            $route.path.includes('/bookings')
               ? 'border-l-4 border-indigo-500 text-indigo-600 font-medium'
               : 'border-l-4 border-transparent text-gray-600'
           "

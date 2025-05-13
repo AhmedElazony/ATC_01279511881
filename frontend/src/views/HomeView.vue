@@ -16,6 +16,7 @@
           <div class="mt-8 flex flex-wrap gap-4">
             <LinkButton to="/events">Browse Events</LinkButton>
             <router-link
+              v-if="!isAuthenticated"
               to="/register"
               class="bg-indigo-500 hover:bg-indigo-400 text-white px-6 py-3 rounded-md font-medium text-lg transition-colors"
             >
@@ -110,8 +111,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
+import { useAuthStore } from "../stores/auth";
 import LinkButton from "../components/ui/LinkButton.vue";
 import api from "../services/api";
 import EventCard from "../components/app/EventCard.vue";
@@ -122,6 +124,8 @@ const events = ref([]);
 const categories = ref([]);
 const isLoading = ref(true);
 const categoriesLoading = ref(true);
+const authStore = useAuthStore();
+const isAuthenticated = computed(() => authStore.isLoggedIn());
 
 // Fetch events and categories on component mount
 onMounted(async () => {

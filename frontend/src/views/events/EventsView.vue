@@ -245,7 +245,11 @@ const fetchEvents = async () => {
     if (filters.search) queryParams.append("q", filters.search);
     if (filters.page) queryParams.append("page", filters.page);
 
-    const response = await api.get(`/events?${queryParams.toString()}`);
+    const response = await api.get(`/events?${queryParams.toString()}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
 
     if (response.data && response.data.data) {
       events.value = response.data.data.items;
@@ -320,12 +324,6 @@ onMounted(() => {
     if (route.query.search) {
       filters.search = route.query.search;
       searchQuery.value = route.query.search;
-    }
-    if (route.query.date) {
-      filters.date = route.query.date;
-    }
-    if (route.query.price) {
-      filters.price = route.query.price;
     }
     if (route.query.page) {
       filters.page = parseInt(route.query.page) || 1;
