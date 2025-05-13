@@ -69,4 +69,11 @@ class Event extends Model
             ]);
         }
     }
+
+    public function bookedByUser(string $userId): bool
+    {
+        return $this->bookings()
+            ->where('user_id', $userId)
+            ->exists();
+    }
 }

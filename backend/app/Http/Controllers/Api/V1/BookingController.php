@@ -11,6 +11,10 @@ class BookingController extends ApiController
     public function store(Event $event)
     {
         $user = auth()->user();
+        if ($event->bookedByUser($user->id)) {
+            return $this->error('You have already booked this event');
+        }
+
         $booking = $user->bookings()->create([
             'event_id' => $event->id,
             'total_price' => $event->price,
