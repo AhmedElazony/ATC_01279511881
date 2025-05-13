@@ -12,6 +12,9 @@ import CategoriesView from "../views/categories/CategoriesView.vue";
 import MyBookingsView from "../views/bookings/MyBookingsView.vue";
 import EventDetailsView from "../views/events/EventDetailsView.vue";
 import BookingSuccessView from "../views/bookings/BookingSuccessView.vue";
+import AdminView from "../views/admin/AdminEventsView.vue";
+import AdminLayout from "../views/admin/AdminLayout.vue";
+import AdminEventsView from "../views/admin/AdminEventsView.vue";
 
 const routes = [
   {
@@ -75,6 +78,43 @@ const routes = [
     component: BookingSuccessView,
     meta: { requiresAuth: true },
   },
+  {
+    path: "/admin",
+    component: AdminLayout,
+    meta: { requiresAuth: true, requiresAdmin: true },
+    children: [
+      {
+        path: "", // Default admin route
+        // redirect: { name: "admin-dashboard" },
+      },
+      // {
+      //   path: "dashboard",
+      //   name: "admin-dashboard",
+      //   component: () => import("@/views/admin/AdminDashboardView.vue"), // Create this component
+      // },
+      {
+        path: "events",
+        name: "admin-events",
+        component: AdminEventsView,
+      },
+      // // Add more admin routes as needed
+      // {
+      //   path: "categories",
+      //   name: "admin-categories",
+      //   component: () => import("@/views/admin/AdminCategoriesView.vue"), // Create this component
+      // },
+      // {
+      //   path: "bookings",
+      //   name: "admin-bookings",
+      //   component: () => import("@/views/admin/AdminBookingsView.vue"), // Create this component
+      // },
+      // {
+      //   path: "users",
+      //   name: "admin-users",
+      //   component: () => import("@/views/admin/AdminUsersView.vue"), // Create this component
+      // },
+    ],
+  },
 ];
 
 const router = createRouter({
@@ -109,6 +149,17 @@ router.beforeEach(async (to, from, next) => {
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (!isLoggedIn) {
       next({ path: "/login", query: { redirect: to.fullPath } });
+      return;
+    }
+  }
+
+  if (to.matched.some((record) => record.meta.requiresAdmin)) {
+    if (
+      !isLoggedIn ||
+      !authStore.user.role ||
+      authStore.user.role !== "super_admin"
+    ) {
+      next({ path: "/" });
       return;
     }
   }

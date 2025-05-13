@@ -25,6 +25,7 @@ class EventResource extends JsonResource
             'venue' => $this->venue,
             'price' => $this->price,
             'image_url' => asset("storage/{$this->image_path}"),
+            'featured' => $this->featured,
             'category' => CategoryResource::make($this->whenLoaded('category')),
             'tags' => TagResource::collection($this->whenLoaded('tags')),
             'added_at' => $this->created_at->format('Y-m-d H:i:s'),

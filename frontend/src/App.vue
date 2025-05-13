@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
 import AppHeader from "./components/layout/AppHeader.vue";
 import AppFooter from "./components/layout/AppFooter.vue";
@@ -25,6 +25,8 @@ const hideLayoutForRoutes = ref([
   "verify-email",
   "forgot-password",
   "reset-password",
+  "admin-dashboard",
+  "admin-events",
 ]);
 </script>
 

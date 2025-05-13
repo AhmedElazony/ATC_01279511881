@@ -114,7 +114,7 @@
         <div class="flex space-x-2">
           <!-- Book now button (only shown for logged in users) -->
           <button
-            v-if="isAuthenticated"
+            v-if="isAuthenticated && isUser"
             @click="bookEvent"
             :disabled="isBooked || isBooking"
             :class="[
@@ -159,6 +159,7 @@ const props = defineProps({
 
 const authStore = useAuthStore();
 const isAuthenticated = computed(() => authStore.isLoggedIn());
+const isUser = computed(() => authStore.user.role === "user");
 const isBooked = ref(false);
 const isBooking = ref(false);
 

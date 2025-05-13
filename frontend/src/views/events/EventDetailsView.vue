@@ -386,7 +386,15 @@
                     </router-link>
                   </div>
 
-                  <!-- Book now button -->
+                  <!-- Book now button (hidden for admins) -->
+                  <div
+                    v-else-if="isAdmin"
+                    class="text-center p-4 bg-gray-50 rounded-md dark:bg-gray-700/30"
+                  >
+                    <p class="text-gray-700 dark:text-gray-300 font-medium">
+                      Admin account - booking disabled
+                    </p>
+                  </div>
                   <button
                     v-else
                     @click="bookEvent"
@@ -453,6 +461,9 @@ const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
 const isAuthenticated = computed(() => authStore.isLoggedIn());
+const isAdmin = computed(
+  () => authStore.user.role === "admin" || authStore.user.role === "super_admin"
+);
 
 // State
 const event = ref({});

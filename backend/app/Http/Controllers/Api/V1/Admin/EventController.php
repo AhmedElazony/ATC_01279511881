@@ -6,6 +6,8 @@ use Api\Support\Http\Controllers\ApiController;
 use App\Http\Requests\EventRequest;
 use App\Http\Resources\EventResource;
 use App\Models\Event;
+use App\Models\Tag;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class EventController extends ApiController
@@ -27,6 +29,9 @@ class EventController extends ApiController
         $validated = $request->validated();
         $imageName = $this->saveImage($validated['image']);
 
+        if ($request->has('featured')) {
+            $validated['featured'] = filter_var($validated['featured'], FILTER_VALIDATE_BOOLEAN);
+        }
         $event = Event::create([
             'name' => $validated['name'],
             'description' => $validated['description'],
@@ -38,7 +43,9 @@ class EventController extends ApiController
             'featured' => $validated['featured'] ?? false,
         ]);
 
-        $event->tags()->sync($validated['tags'] ?? []);
+        if ($request->has('tags_array')) {
+            $this->handleTags($request, $event);
+        }
 
         return $this->success([
             'message' => 'Event created successfully',
@@ -54,7 +61,9 @@ class EventController extends ApiController
             $imageName = $this->saveImage($validated['image']);
             $event->image_path = "events/{$imageName}";
         }
-
+        if ($request->has('featured')) {
+            $event->featured = filter_var($validated['featured'], FILTER_VALIDATE_BOOLEAN);
+        }
         $event->update([
             'name' => $validated['name'] ?? $event->name,
             'description' => $validated['description'] ?? $event->description,
@@ -62,11 +71,11 @@ class EventController extends ApiController
             'price' => $validated['price'] ?? $event->price,
             'date' => $validated['date'] ?? $event->date,
             'venue' => $validated['venue'] ?? $event->venue,
-            'featured' => $validated['featured'] ?? false,
+            'featured' => $validated['featured'] ?? $event->featured,
         ]);
 
-        if (isset($validated['tags'])) {
-            $event->tags()->sync($validated['tags']);
+        if ($request->has('tags_array')) {
+            $this->handleTags($request, $event);
         }
 
         return $this->success([
@@ -94,5 +103,18 @@ class EventController extends ApiController
         );
 
         return $imageName;
+    }
+
+    protected function handleTags(Request $request, Event $event)
+    {
+        $tagsToAttach = [];
+        foreach ($request->tags_array as $tagName) {
+            // Find or create the tag
+            $tag = Tag::firstOrCreate(['name' => $tagName]);
+            $tagsToAttach[] = $tag->id;
+        }
+
+        // Attach tags to the event
+        $event->tags()->sync($tagsToAttach);
     }
 }
