@@ -11,6 +11,9 @@ class BookingController extends ApiController
     public function store(Event $event)
     {
         $user = auth()->user();
+        if ($user->isAdmin() || $user->isSuperAdmin()) {
+            return $this->error('You cannot book an event as an admin');
+        }
         if ($event->bookedByUser($user->id)) {
             return $this->error('You have already booked this event');
         }
