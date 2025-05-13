@@ -27,11 +27,11 @@ class BookingController extends ApiController
 
     public function index()
     {
-        $user = auth()->user();
+        $user = request()->user();
         return $this->success(
             BookingResource::collection(
                 $user->bookings()
-                    ->with(['event.category', 'user'])
+                    ->with(['event.category', 'event.tags', 'user'])
                     ->latest()
                     ->get()
             ),
