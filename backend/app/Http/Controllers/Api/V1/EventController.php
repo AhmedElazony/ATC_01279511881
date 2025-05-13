@@ -19,13 +19,13 @@ class EventController extends ApiController
         return $this->success(EventResource::paginate($events));
     }
 
-    public function show(Event $event)
+    public function show(string $eventId)
     {
         return $this->success([
             'event' => EventResource::make(
-                $event->load(['category', 'tags'])
-                    ->query()->withBookingInfo(auth('sanctum')->user()?->id)
-                    ->first()
+                Event::with(['category', 'tags'])
+                    ->withBookingInfo(auth('sanctum')->user()?->id)
+                    ->findOrFail($eventId)
             ),
         ]);
     }
