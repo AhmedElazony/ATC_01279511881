@@ -8,7 +8,7 @@ import VerifyEmailView from "@/views/auth/VerifyEmailView.vue";
 import ForgotPasswordView from "@/views/auth/ForgotPasswordView.vue";
 import ResetPasswordView from "@/views/auth/ResetPasswordView.vue";
 import EventsView from "../views/events/EventsView.vue";
-import CategoriesView from "../views/events/CategoriesView.vue";
+import CategoriesView from "../views/categories/CategoriesView.vue";
 import MyBookingsView from "../views/bookings/MyBookingsView.vue";
 import EventDetailsView from "../views/events/EventDetailsView.vue";
 import BookingSuccessView from "../views/bookings/BookingSuccessView.vue";
