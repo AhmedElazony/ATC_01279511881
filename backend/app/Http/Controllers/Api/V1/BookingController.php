@@ -27,7 +27,7 @@ class BookingController extends ApiController
         return $this->success(
             BookingResource::collection(
                 $user->bookings()
-                    ->with(['event', 'user'])
+                    ->with(['event.category', 'user'])
                     ->latest()
                     ->get()
             ),
