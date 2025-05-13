@@ -44,7 +44,7 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-1 gap-4">
           <!-- Category Filter -->
           <div>
             <label
@@ -64,47 +64,6 @@
               >
                 {{ category.name }}
               </option>
-            </select>
-          </div>
-
-          <!-- Date Filter -->
-          <div>
-            <label
-              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-              >Date</label
-            >
-            <select
-              v-model="filters.date"
-              class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-              @change="fetchEvents"
-            >
-              <option value="">All Dates</option>
-              <option value="today">Today</option>
-              <option value="tomorrow">Tomorrow</option>
-              <option value="this_week">This Week</option>
-              <option value="this_weekend">This Weekend</option>
-              <option value="next_week">Next Week</option>
-              <option value="this_month">This Month</option>
-            </select>
-          </div>
-
-          <!-- Price Filter -->
-          <div>
-            <label
-              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-              >Price</label
-            >
-            <select
-              v-model="filters.price"
-              class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-              @change="fetchEvents"
-            >
-              <option value="">All Prices</option>
-              <option value="free">Free</option>
-              <option value="paid">Paid</option>
-              <option value="under_50">Under $50</option>
-              <option value="50_100">$50 - $100</option>
-              <option value="over_100">Over $100</option>
             </select>
           </div>
         </div>
@@ -208,6 +167,7 @@ const route = useRoute();
 // Data
 const events = ref([]);
 const categories = ref([]);
+const tags = ref([]);
 const isLoading = ref(true);
 const searchQuery = ref("");
 let searchTimeout = null;
@@ -251,20 +211,21 @@ const fetchEvents = async () => {
       },
     });
 
-    if (response.data && response.data.data) {
-      events.value = response.data.data.items;
-
+    if (response.data && response.data.data.events) {
+      events.value = response.data.data.events.items;
+      categories.value = response.data.data.categories;
       // Update pagination
-      if (response.data.data.paginate) {
-        pagination.current_page = response.data.data.paginate.current_page;
-        pagination.total_pages = response.data.data.paginate.total_pages;
-        pagination.total = response.data.data.paginate.total;
-        pagination.count = response.data.data.paginate.count;
-        pagination.per_page = response.data.data.paginate.per_page;
+      if (response.data.data.events.paginate) {
+        pagination.current_page =
+          response.data.data.events.paginate.current_page;
+        pagination.total_pages = response.data.data.events.paginate.total_pages;
+        pagination.total = response.data.data.events.paginate.total;
+        pagination.count = response.data.data.events.paginate.count;
+        pagination.per_page = response.data.data.events.paginate.per_page;
         pagination.next_page_url =
-          response.data.data.paginate.next_page_url || "";
+          response.data.data.events.paginate.next_page_url || "";
         pagination.prev_page_url =
-          response.data.data.paginate.prev_page_url || "";
+          response.data.data.events.paginate.prev_page_url || "";
       }
     }
   } catch (error) {

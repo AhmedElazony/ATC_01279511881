@@ -12,7 +12,7 @@ class GetAllEventsWithBookingInfoAction
 {
     protected Builder $query;
     protected LengthAwarePaginator $events;
-    public function __construct(protected ?string $userId)
+    public function __construct(protected ?string $userId, protected array $filters)
     {
     }
 
@@ -42,7 +42,7 @@ class GetAllEventsWithBookingInfoAction
     protected function getEventsPaginated()
     {
         $this->events = $this->query->latest()
-            ->filter(request()->only(['q', 'category_id']))
+            ->filter($this->filters)
             ->paginate(9);
 
         return $this;
