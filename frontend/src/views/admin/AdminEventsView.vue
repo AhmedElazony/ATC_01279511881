@@ -1173,7 +1173,7 @@ const saveEvent = async () => {
       );
     }
 
-    formData.append("featured", eventForm.value.featured === true ? "1" : "0");
+    formData.append("featured", eventForm.value.featured ? 1 : 0);
 
     let response;
     if (isEditMode.value) {
