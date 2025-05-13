@@ -24,6 +24,8 @@ class EventController extends ApiController
         return $this->success([
             'event' => EventResource::make(
                 $event->load(['category', 'tags'])
+                    ->query()->withBookingInfo(auth('sanctum')->user()?->id)
+                    ->first()
             ),
         ]);
     }
