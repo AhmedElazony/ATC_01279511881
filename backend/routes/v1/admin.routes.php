@@ -25,5 +25,5 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         ->name('users.index');
 
     Route::post('/users', [UsersController::class, 'createAdmin'])
-        ->name('users.create-admin');
+        ->name('users.create-admin')->middleware('super-admin');
 });
