@@ -357,17 +357,10 @@
                   <span
                     :class="[
                       'px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full',
-                      selectedBooking.status === 'confirmed'
-                        ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-                        : selectedBooking.status === 'pending'
-                        ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
-                        : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+                      'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
                     ]"
                   >
-                    {{
-                      selectedBooking.status?.charAt(0).toUpperCase() +
-                      selectedBooking.status?.slice(1)
-                    }}
+                    Confirmed
                   </span>
                 </div>
                 <div
