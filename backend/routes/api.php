@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\V1\HomeController;
+use App\Http\Controllers\Api\V1\UserProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'v1', 'as' => 'v1.'], function () {
@@ -12,6 +13,9 @@ Route::group(['prefix' => 'v1', 'as' => 'v1.'], function () {
 
     Route::group(['middleware' => 'auth:sanctum'], function () {
         require __DIR__ . '/v1/booking.routes.php';
+
+        Route::get('/user/stats', UserProfileController::class)
+            ->name('user.stats');
     });
 
     Route::group(['middleware' => ['auth:sanctum', 'admin']], function () {

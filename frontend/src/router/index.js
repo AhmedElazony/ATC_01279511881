@@ -17,6 +17,7 @@ import AdminLayout from "../views/admin/AdminLayout.vue";
 import AdminEventsView from "../views/admin/AdminEventsView.vue";
 import AdminBookingListView from "../views/admin/AdminBookingListView.vue";
 import AdminUsersListView from "../views/admin/AdminUsersListView.vue";
+import UserProfileView from "../views/user/UserProfileView.vue";
 
 const routes = [
   {
@@ -52,6 +53,12 @@ const routes = [
     name: "reset-password",
     component: ResetPasswordView,
     meta: { guest: true },
+  },
+  {
+    path: "/profile",
+    name: "profile",
+    component: UserProfileView,
+    meta: { requiresAuth: true },
   },
   {
     path: "/events",

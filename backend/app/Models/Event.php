@@ -75,6 +75,12 @@ class Event extends Model
         }
     }
 
+    #[Scope()]
+    public function upcoming(Builder $query): void
+    {
+        $query->where('date', '>', now());
+    }
+
     public function bookedByUser(string $userId): bool
     {
         return $this->bookings()
