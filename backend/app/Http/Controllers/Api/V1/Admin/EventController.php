@@ -50,7 +50,7 @@ class EventController extends ApiController
         return $this->success([
             'message' => 'Event created successfully',
             'event' => EventResource::make($event->load(['category', 'tags'])),
-        ]);
+        ], 201);
     }
 
     public function update(EventRequest $request, Event $event)
