@@ -91,7 +91,7 @@
               </router-link>
               <router-link
                 v-if="isAdmin"
-                to="/admin"
+                to="/admin/events"
                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                 role="menuitem"
               >

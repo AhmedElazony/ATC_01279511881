@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Api\V1\Admin\BookingController;
 use App\Http\Controllers\Api\V1\Admin\EventController;
+use App\Http\Controllers\Api\V1\Admin\UsersController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
@@ -15,4 +17,13 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
 
     Route::delete('/events/{event}/destroy', [EventController::class, 'destroy'])
         ->name('events.destroy');
+
+    Route::get('/bookings', BookingController::class)
+        ->name('bookings.index');
+
+    Route::get('/users', [UsersController::class, 'index'])
+        ->name('users.index');
+
+    Route::post('/users', [UsersController::class, 'createAdmin'])
+        ->name('users.create-admin');
 });

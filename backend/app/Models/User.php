@@ -4,6 +4,8 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\RolesEnum;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -69,5 +71,18 @@ class User extends Authenticatable implements MustVerifyEmail
     public function isSuperAdmin(): bool
     {
         return $this->role === RolesEnum::SUPER_ADMIN->value;
+    }
+
+    #[Scope()]
+    public function filter(Builder $query, array $filters): void
+    {
+        $query->when(
+            $filters['q'] ?? null,
+            fn($q) => $q->where('name', 'like', "%{$filters['q']}%")
+                ->orWhere('email', 'like', "%{$filters['q']}%")
+        )->when(
+                $filters['role'] ?? null,
+                fn($q) => $q->where('role', 'like', "%{$filters['role']}%")
+            );
     }
 }

@@ -25,7 +25,9 @@ const hideLayoutForRoutes = ref([
   "verify-email",
   "forgot-password",
   "reset-password",
-  "admin-dashboard",
+  "admin-bookings",
+  "admin-users",
+  "admin-categories",
   "admin-events",
 ]);
 </script>
