@@ -24,6 +24,7 @@ class EventFactory extends Factory
             'venue' => $this->faker->address,
             'price' => $this->faker->randomFloat(2, 0, 100),
             'category_id' => \App\Models\Category::factory(),
+            'featured' => $this->faker->boolean(20), // 20% chance to be featured
         ];
     }
 
