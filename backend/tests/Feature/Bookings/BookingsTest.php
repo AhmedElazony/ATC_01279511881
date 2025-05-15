@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Bookings;
 
 use App\Models\Booking;
 use App\Models\Event;
