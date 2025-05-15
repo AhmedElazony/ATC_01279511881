@@ -168,7 +168,6 @@ onMounted(async () => {
   if (isAuthenticated.value) {
     try {
       isBooked.value = props.event.booked_by_user || false;
-      console.log(props.event);
     } catch (error) {
       console.error("Error checking booking status:", error);
       alert("Failed to check booking status. Please try again.");
