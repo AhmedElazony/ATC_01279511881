@@ -166,7 +166,7 @@
         <!-- Mobile menu button -->
         <div class="flex items-center md:hidden">
           <button
-            @click="toggleMobileMenu"
+            @click.stop="toggleMobileMenu"
             type="button"
             class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100"
             :aria-expanded="isMobileMenuOpen"
@@ -214,13 +214,13 @@
     <!-- Mobile menu -->
     <div
       v-show="isMobileMenuOpen"
-      class="md:hidden shadow-lg border-t bg-white dark:bg-gray-600 transition-all duration-200"
+      class="md:hidden shadow-lg border-t bg-white dark:bg-gray-900 transition-all duration-200"
       ref="mobileMenu"
     >
       <div class="pt-2 pb-3 space-y-1">
         <router-link
           to="/"
-          class="block pl-3 pr-4 py-2 hover:bg-gray-50"
+          class="block pl-3 pr-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-800 dark:text-white"
           :class="
             $route.path === '/'
               ? 'border-l-4 border-indigo-500 text-indigo-600 font-medium'
@@ -232,7 +232,7 @@
         </router-link>
         <router-link
           to="/events"
-          class="block pl-3 pr-4 py-2 hover:bg-gray-50"
+          class="block pl-3 pr-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-800 dark:text-white"
           :class="
             $route.path.includes('/events')
               ? 'border-l-4 border-indigo-500 text-indigo-600 font-medium'
@@ -244,7 +244,7 @@
         </router-link>
         <router-link
           to="/categories"
-          class="block pl-3 pr-4 py-2 hover:bg-gray-50"
+          class="block pl-3 pr-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-800 dark:text-white"
           :class="
             $route.path.includes('/categories')
               ? 'border-l-4 border-indigo-500 text-indigo-600 font-medium'
@@ -255,9 +255,9 @@
           Categories
         </router-link>
         <router-link
-          v-if="isLoggedIn"
+          v-if="isLoggedIn && !isAdmin"
           to="/bookings"
-          class="block pl-3 pr-4 py-2 hover:bg-gray-50"
+          class="block pl-3 pr-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-800 dark:text-white"
           :class="
             $route.path.includes('/bookings')
               ? 'border-l-4 border-indigo-500 text-indigo-600 font-medium'
@@ -269,7 +269,12 @@
         </router-link>
       </div>
 
-      <div v-if="isLoggedIn" class="pt-4 pb-3 border-t border-gray-200">
+      <!-- Dark Mode Toggle for Mobile -->
+      <div class="px-4 py-2 border-t border-gray-200 dark:border-gray-500">
+        <ToggleDarkModeButton />
+      </div>
+
+      <div v-if="isLoggedIn" class="pt-4 pb-3 border-t border-gray-500">
         <div class="flex items-center px-4 py-2">
           <div class="flex-shrink-0">
             <div
@@ -279,10 +284,10 @@
             </div>
           </div>
           <div class="ml-3">
-            <div class="text-base font-medium text-gray-800">
+            <div class="text-base font-medium text-gray-800 dark:text-white">
               {{ user?.name || "User" }}
             </div>
-            <div class="text-sm font-medium text-gray-500">
+            <div class="text-sm font-medium text-gray-500 dark:text-gray-400">
               {{ user?.email }}
             </div>
           </div>
@@ -290,7 +295,7 @@
         <div class="mt-3 space-y-1">
           <router-link
             to="/profile"
-            class="block px-4 py-2 text-base font-medium text-gray-600 hover:bg-gray-50"
+            class="block px-4 py-2 text-base font-medium text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:text-white"
             @click="isMobileMenuOpen = false"
           >
             Your Profile
@@ -298,7 +303,7 @@
           <router-link
             v-if="isAdmin"
             to="/admin"
-            class="block px-4 py-2 text-base font-medium text-gray-600 hover:bg-gray-50"
+            class="block px-4 py-2 text-base font-medium text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:text-white"
             @click="isMobileMenuOpen = false"
           >
             Admin Dashboard
