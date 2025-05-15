@@ -172,6 +172,8 @@ git clone https://github.com/AhmedElazony/ATC_01279511881
   php artisan test
   ```
 
+  note: make sure to edit the file [phpunit.xml](./backend/phpunit.xml) with your test database credentials, so that the tests run correctly.
+
 ### Deployment
 
 I deployed the project on a DigitalOcean VPS, made everything with the aid of copilot, including project (backend, frontend) setup to nginx configuration, and ssl certification, etc.
