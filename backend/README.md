@@ -47,6 +47,7 @@ The backend exposes RESTful endpoints. Here are a few examples:
     -   POST /api/v1/auth/forgot-password
     -   POST /api/v1/auth/reset-password
     -   POST /api/v1/auth/send-verification-otp
+    -   GET /api/v1/auth/user
 
 -   **Events**
 

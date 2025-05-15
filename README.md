@@ -113,7 +113,13 @@ git clone https://github.com/AhmedElazony/ATC_01279511881
    php artisan migrate --seed
    ```
 
-7. **(Optional) Run the Backend Development Server:**
+7. **Link the Storage Directory:**
+
+   ```shell
+   php artisan storage:link
+   ```
+
+8. **(Optional) Run the Backend Development Server:**
 
    ```shell
    php artisan serve
@@ -167,6 +173,10 @@ git clone https://github.com/AhmedElazony/ATC_01279511881
   ```
 
 ### Deployment
+
+I deployed the project on a DigitalOcean VPS, made everything with the aid of copilot, including project (backend, frontend) setup to nginx configuration, and ssl certification, etc.
+
+you can visit it here: [Live Project](https://areeb.ahmedelazony.me)
 
 ---
 
