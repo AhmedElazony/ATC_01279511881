@@ -15,7 +15,10 @@
             <NavLink to="/">Home</NavLink>
             <NavLink to="/events" name="Events">Events</NavLink>
             <NavLink to="/categories" name="Categories">Categories</NavLink>
-            <NavLink v-if="isLoggedIn" to="/bookings" name="My Bookings"
+            <NavLink
+              v-if="isLoggedIn && !isAdmin"
+              to="/bookings"
+              name="My Bookings"
               >My Bookings</NavLink
             >
           </nav>
